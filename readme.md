@@ -24,3 +24,7 @@ $ ./monitor.py btcusdt 20000
 # Technologies
 - Python 3.7.8
 - The current dependencies are listed [here](requirements.txt)
+
+# Logs
+- Added symbol verification
+- Implemented reconnect websocket server connection after 23H passed
