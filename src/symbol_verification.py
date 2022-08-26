@@ -1,9 +1,8 @@
 import time
 import json
 import os
+from src.config import SYMBOLS_SRC
 from src.binance_exchange_info import BinanceExchangeInfo
-
-SYMBOLS_FILENAME = 'binance_symbols.json'
 
 
 class SymbolVerification:
@@ -11,9 +10,9 @@ class SymbolVerification:
     symbols = []
 
     def get_symbols(self):
-        if os.path.exists(SYMBOLS_FILENAME):
+        if os.path.exists(SYMBOLS_SRC):
             current_time = time.time()
-            modified_time = os.path.getmtime(SYMBOLS_FILENAME)
+            modified_time = os.path.getmtime(SYMBOLS_SRC)
             duration = current_time - modified_time
 
             if duration < 60 * 60 * 24:
@@ -28,5 +27,5 @@ class SymbolVerification:
             return True
 
     def load_symbols(self):
-        with open(SYMBOLS_FILENAME) as file_:
+        with open(SYMBOLS_SRC) as file_:
             self.symbols = json.load(file_)

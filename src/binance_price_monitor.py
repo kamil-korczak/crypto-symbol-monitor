@@ -1,11 +1,17 @@
 import decimal
 import json
-import websocket
 import time
+import websocket
 
 
-BINANCE_URI = 'wss://stream.binance.com:9443'
-RECONNECT_TIME = 60*60*23  # in seconds
+BINANCE_WEBSOCKET_URI = 'wss://stream.binance.com:9443'
+
+#: var: WEBSOCKET_RECONNECT_TIME
+#: Binance websocket documentation says:
+#: A single connection to stream.binance.com is only valid for 24 hours;
+#: expect to be disconnected at the 24 hour mark
+#: Therefore the var: WEBSOCKET_RECONNECT_TIME is set to less than 24h.
+WEBSOCKET_RECONNECT_TIME = 60*60*23  # in seconds
 
 
 class BinancePriceMonitor:
@@ -40,8 +46,8 @@ class BinancePriceMonitor:
             print("close message: " + str(close_msg))
 
     def on_ping(self, ws, message):
-        if int(time.time() - self.timer) > RECONNECT_TIME:
-            print(f'Reconnect time {RECONNECT_TIME}s passed.')
+        if int(time.time() - self.timer) > WEBSOCKET_RECONNECT_TIME:
+            print(f'Reconnect time {WEBSOCKET_RECONNECT_TIME}s passed.')
             print('In a moment websocket is going to reconnect...')
             self.re_run = True
             ws.close(status=websocket.STATUS_NORMAL)
@@ -64,7 +70,7 @@ class BinancePriceMonitor:
             if self.re_run:
                 self.re_run = False
 
-            uri = f"{BINANCE_URI}/ws/{self.symbol}@trade"
+            uri = f"{BINANCE_WEBSOCKET_URI}/ws/{self.symbol}@trade"
             ws = websocket.WebSocketApp(uri,
                                         on_open=self.on_open,
                                         on_message=self.on_message,

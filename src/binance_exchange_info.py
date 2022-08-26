@@ -1,8 +1,9 @@
 import json
 import requests
+import os
+from src.config import SYMBOLS_SRC
 
 BINANCE_EXCHANGE_INFO_API = 'https://www.binance.com/api/v3/exchangeInfo'
-SYMBOLS_FILENAME = 'binance_symbols.json'
 
 
 class BinanceExchangeInfo():
@@ -19,10 +20,12 @@ class BinanceExchangeInfo():
         symbols = data.get('symbols')
 
         if symbols:
-            return [symbol.get('symbol').lower() for symbol in symbols]
+            return [symbol['symbol'].lower() for symbol in symbols]
 
     def save_symbols(self):
         symbols = self.get_symbols(self.get_data())
 
-        with open(SYMBOLS_FILENAME, 'w') as file_:
+        os.makedirs(os.path.dirname(SYMBOLS_SRC), exist_ok=True)
+
+        with open(SYMBOLS_SRC, 'w') as file_:
             json.dump(symbols, file_)
