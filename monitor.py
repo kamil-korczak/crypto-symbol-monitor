@@ -28,7 +28,7 @@ class MonitorArgsParser(argparse.ArgumentParser):
         sys.exit(2)
 
 
-def show_menu():
+def parse_args():
 
     args_parser = MonitorArgsParser(
         description=CRYPTO_MARKET_SYMBOL_MONITORING_DESCRIPTION,
@@ -41,7 +41,6 @@ def show_menu():
     args = args_parser.parse_args()
 
     symbol = args.symbol.lower()
-    user_price = decimal.Decimal(args.user_price)
 
     symbol_verification = SymbolVerification()
     symbol_verification.get_symbols()
@@ -51,7 +50,19 @@ def show_menu():
         print('The given symbol is not available. Try again.')
         symbol = input("Symbol of crypto market: ").lower()
 
-    run_app(symbol, user_price)
+    user_price = None
+
+    while not isinstance(user_price, decimal.Decimal):
+        try:
+            if not user_price:
+                user_price = decimal.Decimal(args.user_price)
+            else:
+                user_price = decimal.Decimal(user_price)
+        except decimal.InvalidOperation:
+            print('The text provided is not a decimal number.')
+            user_price = input('Price of a given symbol: ')
+
+    return (symbol, user_price)
 
 
 def run_app(symbol, user_price):
@@ -61,4 +72,5 @@ def run_app(symbol, user_price):
 
 
 if __name__ == '__main__':
-    show_menu()
+    symbol_, user_price_ = parse_args()
+    run_app(symbol_, user_price_)
