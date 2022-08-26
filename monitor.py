@@ -4,8 +4,8 @@ import argparse
 from argparse import RawTextHelpFormatter
 import decimal
 import sys
-from symbol_verification import SymbolVerification
-from binance_price_monitor import BinancePriceMonitor
+from src.symbol_verification import SymbolVerification
+from src.binance_price_monitor import BinancePriceMonitor
 
 CRYPTO_MARKET_SYMBOL_MONITORING_DESCRIPTION = \
     """-------------------------------------

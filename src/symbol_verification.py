@@ -1,7 +1,7 @@
 import time
 import json
 import os
-from binance_exchange_info import BinanceExchangeInfo
+from src.binance_exchange_info import BinanceExchangeInfo
 
 SYMBOLS_FILENAME = 'binance_symbols.json'
 
