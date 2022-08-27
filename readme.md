@@ -28,3 +28,7 @@ $ ./monitor.py btcusdt 20000
 # Changelog
 - Added verification of provided exchange symbol.
 - Implemented reconnect websocket server connection after 23 hours.
+- Added **```--debug```** mode as optional *`parseargs`*
+- Implemented logs logging
+    - Formatting logs based on the *`debug`* flag
+    - Different color formatting for log types

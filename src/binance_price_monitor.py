@@ -16,17 +16,19 @@ WEBSOCKET_RECONNECT_TIME = 60*60*23  # in seconds
 
 class BinancePriceMonitor:
 
-    def __init__(self, symbol, user_price):
+    def __init__(self, app, symbol, user_price):
         self.timer = None
         self.re_run = False
         self.run_forever_flag = True
+
+        self.logging = app.logging
 
         self.symbol = symbol
         self.user_price = user_price
 
     def on_open(self, ws):
         self.timer = time.time()
-        print("Opened connection")
+        self.logging.info("Opened connection")
 
     def on_message(self, ws, raw_data):
         data = json.loads(raw_data)
@@ -35,20 +37,23 @@ class BinancePriceMonitor:
         self.process_price(price)
 
     def on_error(self, ws, error):
-        print(error)
+        if isinstance(error, KeyboardInterrupt):
+            self.logging.warning('Keyboard Interrupt')
+        else:
+            self.logging.error(error)
 
     def on_close(self, ws, close_status_code, close_msg):
-        print("### Closed connection ###")
+        self.logging.info("### Closed connection ###")
         # Because on_close was triggered, we know the opcode = 8
         if close_status_code or close_msg:
-            print("on_close args:")
-            print("close status code: " + str(close_status_code))
-            print("close message: " + str(close_msg))
+            self.logging.info("close status code: " + str(close_status_code))
+            self.logging.info("close message: " + str(close_msg))
 
     def on_ping(self, ws, message):
         if int(time.time() - self.timer) > WEBSOCKET_RECONNECT_TIME:
-            print(f'Reconnect time {WEBSOCKET_RECONNECT_TIME}s passed.')
-            print('In a moment websocket is going to reconnect...')
+            self.logging.info(
+                f'Reconnect time {WEBSOCKET_RECONNECT_TIME}s passed.')
+            self.logging.info('In a moment websocket is going to reconnect...')
             self.re_run = True
             ws.close(status=websocket.STATUS_NORMAL)
 
@@ -59,11 +64,12 @@ class BinancePriceMonitor:
         price = decimal.Decimal(price)
 
         if price > self.user_price:
-            print(f'Price of {self.symbol.upper()}: {price}')
+            self.logging.info(f'Price of {self.symbol.upper()}: {price}')
 
     def run(self):
 
-        print(f"Starting monitoring price of {self.symbol.upper()} symbol...")
+        self.logging.info(
+            f"Starting monitoring price of {self.symbol.upper()} symbol...")
 
         while self.run_forever_flag or self.re_run:
 
