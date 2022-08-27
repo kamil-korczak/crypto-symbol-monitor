@@ -17,8 +17,15 @@ $ ./monitor.py
 ```
 $ ./monitor.py btcusdt 20000
 ```
-![ss](readme-images/ran_with_args.png)
+![ss](readme-images/ran_with_args_no_debug.png)
 
+## Ran with positional args and `--debug` mode:
+*Monitor prices of `BTCUSDT` market and print price when it's above `20000`*
+
+```
+$ ./monitor.py btcusdt 20000 --debug
+```
+![ss](readme-images/ran_with_args_debug.png)
 
 
 # Technologies
@@ -28,7 +35,7 @@ $ ./monitor.py btcusdt 20000
 # Changelog
 - Added verification of provided exchange symbol.
 - Implemented reconnect websocket server connection after 23 hours.
-- Added **```--debug```** mode as optional *`parseargs`*
+- Added **`--debug`** mode as optional *`parseargs`*
 - Implemented logs logging
     - Formatting logs based on the *`debug`* flag
     - Different color formatting for log types
