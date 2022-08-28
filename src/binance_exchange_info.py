@@ -22,10 +22,12 @@ class BinanceExchangeInfo():
         if symbols:
             return [symbol['symbol'].lower() for symbol in symbols]
 
-    def save_symbols(self):
-        symbols = self.get_symbols(self.get_data())
+    def save_symbols(self, symbols, file_path=SYMBOLS_SRC):
+        """
+        :param file_path - for testing purpose, by default no need to specify.
+        """
 
-        os.makedirs(os.path.dirname(SYMBOLS_SRC), exist_ok=True)
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-        with open(SYMBOLS_SRC, 'w') as file_:
+        with open(file_path, 'w') as file_:
             json.dump(symbols, file_)

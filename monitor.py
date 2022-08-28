@@ -39,7 +39,7 @@ class CryptoSymbolMonitor:
     def load_logger(self):
         self.logging = create_logger(self)
 
-    def parse_args(self):
+    def parse_args(self, app_args):
 
         args_parser = MonitorArgsParser(
             description=CRYPTO_MARKET_SYMBOL_MONITORING_DESCRIPTION,
@@ -53,7 +53,7 @@ class CryptoSymbolMonitor:
         # Debug as optional argument
         args_parser.add_argument('-d', '--debug', action='store_true')
 
-        args = args_parser.parse_args()
+        args = args_parser.parse_args(app_args)
 
         self.debug = args.debug
         self.load_logger()
@@ -90,6 +90,10 @@ class CryptoSymbolMonitor:
 
 
 if __name__ == '__main__':
+    app_args_ = None
+    if len(sys.argv) > 1:
+        app_args_ = sys.argv[1:]
+
     crypto_symbol_monitor = CryptoSymbolMonitor()
-    symbol_, user_price_ = crypto_symbol_monitor.parse_args()
+    symbol_, user_price_ = crypto_symbol_monitor.parse_args(app_args_)
     crypto_symbol_monitor.run_app(symbol_, user_price_)

@@ -10,6 +10,7 @@ class SymbolVerification:
     symbols = []
 
     def get_symbols(self):
+        # TODO should be refactored for better testing
         if os.path.exists(SYMBOLS_SRC):
             current_time = time.time()
             modified_time = os.path.getmtime(SYMBOLS_SRC)
@@ -20,12 +21,15 @@ class SymbolVerification:
 
         binance_exchange_info = BinanceExchangeInfo()
         binance_exchange_info.connect()
-        binance_exchange_info.save_symbols()
+        symbols = binance_exchange_info.get_symbols(
+            binance_exchange_info.get_data())
+        binance_exchange_info.save_symbols(symbols)
+
+    def load_symbols(self):
+        # TODO should be refactored for better testing
+        with open(SYMBOLS_SRC) as file_:
+            self.symbols = json.load(file_)
 
     def verify(self, symbol):
         if symbol in self.symbols:
             return True
-
-    def load_symbols(self):
-        with open(SYMBOLS_SRC) as file_:
-            self.symbols = json.load(file_)
