@@ -39,3 +39,4 @@ $ ./monitor.py btcusdt 20000 --debug
 - Implemented logs logging
     - Formatting logs based on the *`debug`* flag
     - Different color formatting for log types
+- Added unit tests with pytest
