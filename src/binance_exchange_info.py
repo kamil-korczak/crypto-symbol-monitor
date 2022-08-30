@@ -24,7 +24,7 @@ class BinanceExchangeInfo():
 
     def save_symbols(self, symbols, file_path=SYMBOLS_SRC):
         """
-        :param file_path - for testing purpose, by default no need to specify.
+        :param file_path - for testing purposes.
         """
 
         os.makedirs(os.path.dirname(file_path), exist_ok=True)

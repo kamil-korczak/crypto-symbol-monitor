@@ -9,11 +9,13 @@ class SymbolVerification:
 
     symbols = []
 
-    def get_symbols(self):
-        # TODO should be refactored for better testing
-        if os.path.exists(SYMBOLS_SRC):
+    def get_symbols(self, file_path=SYMBOLS_SRC):
+        """
+        :param file_path - for testing purposes.
+        """
+        if os.path.exists(file_path):
             current_time = time.time()
-            modified_time = os.path.getmtime(SYMBOLS_SRC)
+            modified_time = os.path.getmtime(file_path)
             duration = current_time - modified_time
 
             if duration < 60 * 60 * 24:
@@ -23,11 +25,13 @@ class SymbolVerification:
         binance_exchange_info.connect()
         symbols = binance_exchange_info.get_symbols(
             binance_exchange_info.get_data())
-        binance_exchange_info.save_symbols(symbols)
+        binance_exchange_info.save_symbols(symbols, file_path)
 
-    def load_symbols(self):
-        # TODO should be refactored for better testing
-        with open(SYMBOLS_SRC) as file_:
+    def load_symbols(self, file_path=SYMBOLS_SRC):
+        """
+        :param file_path - for testing purposes.
+        """
+        with open(file_path) as file_:
             self.symbols = json.load(file_)
 
     def verify(self, symbol):

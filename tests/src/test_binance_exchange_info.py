@@ -5,14 +5,14 @@ import pytest
 from src.binance_exchange_info import BinanceExchangeInfo
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='class')
 def binance_exchange_info_connection():
     binance_exchange_info = BinanceExchangeInfo()
     binance_exchange_info.connect()
     return binance_exchange_info
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='class')
 def get_symbols(binance_exchange_info_connection):
     data = binance_exchange_info_connection.get_data()
     return binance_exchange_info_connection.get_symbols(data)
@@ -34,12 +34,11 @@ class TestBinanceExchangeInfo:
                    for symbol in random_symbols) is True, \
             "Not all symbols are strings in random list."
 
-    def test_save_symbols(self, tmp_path, binance_exchange_info_connection, get_symbols):
-        file_path = os.path.join(tmp_path, 'test_symbols.json')
-        binance_exchange_info_connection.save_symbols(get_symbols, file_path)
+    def test_save_symbols(self, temp_symbols_path, binance_exchange_info_connection, get_symbols):
+        binance_exchange_info_connection.save_symbols(get_symbols, temp_symbols_path)
 
         try:
-            with open(file_path) as file_:
+            with open(temp_symbols_path) as file_:
                 data = json.load(file_)
                 file_is_json = True
         except ValueError:

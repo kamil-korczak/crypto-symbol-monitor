@@ -4,24 +4,31 @@ import pytest
 from src.symbol_verification import SymbolVerification, SYMBOLS_SRC
 
 
-@pytest.fixture(scope="module")
-def get_symbols():
+class SymbolVerificationTestHelper:
+
+    def __init__(self, file_path, symbol_verification):
+        self.file_path = file_path
+        self.symbol_verification = symbol_verification
+
+
+@pytest.fixture(scope="class")
+def get_symbols(temp_symbols_path):
     symbol_verification = SymbolVerification()
-    symbol_verification.get_symbols()
-    return symbol_verification
+    symbol_verification.get_symbols(temp_symbols_path)
+    return SymbolVerificationTestHelper(temp_symbols_path, symbol_verification)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="class")
 def load_symbols(get_symbols):
-    get_symbols.load_symbols()
-    return get_symbols
+    get_symbols.symbol_verification.load_symbols(get_symbols.file_path)
+    return get_symbols.symbol_verification
 
 
 class TestSymbolVerification:
 
     def test_get_symbols(self, get_symbols):
-        # TODO Symbols should be saved in temp dir. Source method should be refactored.
-        assert os.path.exists(SYMBOLS_SRC)
+        assert os.path.exists(
+            get_symbols.file_path), 'File with symbols not exists'
 
     def test_load_symbols(self, load_symbols):
         assert isinstance(load_symbols.symbols, list)

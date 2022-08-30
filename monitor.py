@@ -4,6 +4,7 @@ import argparse
 from argparse import RawTextHelpFormatter
 import decimal
 import sys
+from src.config import SYMBOLS_SRC
 from src.logging import create_logger
 from src.symbol_verification import SymbolVerification
 from src.binance_price_monitor import BinancePriceMonitor
@@ -31,10 +32,13 @@ class MonitorArgsParser(argparse.ArgumentParser):
 
 class CryptoSymbolMonitor:
 
-    def __init__(self):
+    def __init__(self, symbols_file_path=SYMBOLS_SRC):
         self.debug = None
         self.name = __name__
         self.logging = None
+
+        # For testing purposes
+        self.symbols_file_path = symbols_file_path
 
     def load_logger(self):
         self.logging = create_logger(self)
@@ -61,8 +65,8 @@ class CryptoSymbolMonitor:
         symbol = args.symbol.lower()
 
         symbol_verification = SymbolVerification()
-        symbol_verification.get_symbols()
-        symbol_verification.load_symbols()
+        symbol_verification.get_symbols(self.symbols_file_path)
+        symbol_verification.load_symbols(self.symbols_file_path)
 
         while not symbol_verification.verify(symbol):
             self.logging.error('The given symbol is not available. Try again.')

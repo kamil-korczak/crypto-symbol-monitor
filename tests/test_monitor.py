@@ -27,9 +27,9 @@ optional arguments:
 ARG_PARSER_ERROR_MESSAGE = 'error: the following arguments are required: symbol, user_price\n'
 
 
-@pytest.fixture
-def monitor():
-    return CryptoSymbolMonitor()
+@pytest.fixture(scope="class")
+def monitor(temp_symbols_path):
+    return CryptoSymbolMonitor(symbols_file_path=temp_symbols_path)
 
 
 class TestMonitor:
